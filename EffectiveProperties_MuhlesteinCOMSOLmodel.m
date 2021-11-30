@@ -5,9 +5,12 @@
 %BackwardPress:
 %columns 3,7,9 can be expelled
 
+%General Material Properties
 c0 = 343; %m/s
 rho0 = 1.15; %kg/m^3
 Z0 = c0*rho0; %rayls
+
+%Tube properties (only using microphone positions 1 and 2)
 d12 = .00224; %m
 d2s = .00183; %m
 d3s = .00183; %m
@@ -25,6 +28,7 @@ freq = f_press(:,1);
 omega = 2*pi.*freq;
 k0 = omega./c0;
 
+%Reflection and Transmission Coefficients (Backwards and Forwards)
 for x = 1:length(freq)
     R(x,1) = (f_press(x,2)+1i*f_press(x,6))/(f_press(x,4)+1i*f_press(x,8));
     T(x,1) = abs(f_press(x,3)+1i*f_press(x,7))*exp(-1i*(d3s+d34)*k0(x)/2);
@@ -100,6 +104,7 @@ grid
 legend("Real","Imag")
 xlabel("Frequency (Hz)")
 ylabel("W")
+
 %Neglecting Willis Coupling------------------------------------------------
 %Forward (R)
 r_f = sqrt((1-R.*R+T.^2).^2 - T.^2);
@@ -111,7 +116,7 @@ k_f = 1/L.*(1i.*log(x)+2*pi.*m);
 kappa_f = Z_f.*omega./k_f;
 rho_f = Z_f.*k_f./omega;
 
-%Backward
+%Backward (R_B)
 r_b = sqrt((1-R_B.*R_B+T.^2).^2 - T.^2);
 x_b = (1-R_B.*R_B+T.^2+r)./(2.*T);
 
